@@ -3,23 +3,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+    const fotos = [];
+    for (let i = 1; i <= 10; i++) {
+      fotos.push({
+        titulo: `foto${i}.jpg`,
+        descripcion: `Descripción de la foto ${i}`,
+        calificacion: parseFloat((Math.random()*4+1).toFixed(2)), // FLOAT, no string
+        ruta: 'public/images/' + 'fotos'+i + '.png',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+    await queryInterface.bulkInsert('fotos', fotos, {});
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete('fotos', null, {});
   }
 };
