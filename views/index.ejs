@@ -1,5 +1,4 @@
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
     <div class="table-responsive">
@@ -24,20 +23,12 @@
                 <th>Titulo</th>
                 <th>Descripcion</th>
                 <th>Ruta</th>
+                <th>Etiquetas</th>
                 <th>Fecha de creacion</th>
                     </tr> 
                 </thead>
-                <tbody>
-                    <% arrFotos.forEach((foto)=> { %>
-                        <tr>
-                    <td><%= foto.id %></td>
-                    <td><%= foto.titulo %></td>
-                    <td><%= foto.descripcion %></td>
-                    <td><%= foto.ruta %> </td>
-                    <td><%= foto.createdAt %></td>
-
-                </tr>
-                        <% }); %>
+                <tbody id="fotos-tbody">
+                    <!-- Aquí se llenarán las filas con JS -->
                 </tbody>
             </table>
             <div class="clearfix">
@@ -55,3 +46,34 @@
         </div>
     </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/fotos/findAll/json')
+        .then(response => response.json())
+        .then(arrFotos => {
+            const tbody = document.getElementById('fotos-tbody');
+            tbody.innerHTML = '';
+            arrFotos.forEach(foto => {
+                // Selecciona una etiqueta al azar (si tiene al menos una)
+                let etiquetaTexto = '';
+                if (foto.etiqueta && foto.etiqueta.length > 0) {
+                    const randomIdx = Math.floor(Math.random() * foto.etiqueta.length);
+                    etiquetaTexto = foto.etiqueta[randomIdx].texto;
+                }
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${foto.id}</td>
+                    <td>${foto.titulo}</td>
+                    <td>${foto.descripcion}</td>
+                    <td>${foto.ruta}</td>
+                    <td>${etiquetaTexto}</td>
+                    <td>${new Date(foto.createdAt).toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => {
+            alert('Error al cargar las fotos');
+        });
+});
+</script>
