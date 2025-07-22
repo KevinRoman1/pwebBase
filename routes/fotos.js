@@ -44,3 +44,29 @@ router.get('/', async function(req, res, next) {
     res.status(500).send('Error al obtener las fotos');
   }
 });
+
+
+
+router.get('/findById/:id', function (req, res, next) {
+  Foto.findByPk(req.params.id, {
+    attributes: { exclude: ['updatedAt'] },
+    include: [{
+      model: Etiqueta,
+      attributes: ['texto'],
+      through: { attributes: [] }
+    }]
+  })
+  .then(foto => {
+    if (!foto) {
+      return res.status(404).json({ error: 'Foto no encontrada' });
+    }
+    res.json(foto);
+  })
+  .catch(error => {
+    res.status(500).send('Error al obtener la foto');
+  });
+});
+
+router.get('/foto/:id', function(req, res) {
+  res.render('foto'); 
+});

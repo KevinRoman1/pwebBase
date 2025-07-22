@@ -8,6 +8,11 @@
                     <div class="col-sm-5">
                         <h2>Photos</h2>
                     </div>
+                    <div class="input-group mb-3">
+  <input type="number" id="fotoIdInput" class="form-control" placeholder="Ingrese el ID de la foto">
+  <button id="fotoIdBtn" class="btn btn-primary" type="button">Buscar Foto por ID</button>
+</div>
+
                     <div class="col-sm-7">
                         <a href="#" class="btn btn-secondary"><i class="materialicons">&#xE147;</i> <span>Add New
                                 Photo</span></a>
@@ -45,6 +50,8 @@
             </div>
         </div>
     </div>
+    hola
+
 </main>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -75,5 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(err => {
             alert('Error al cargar las fotos');
         });
+});
+
+document.getElementById('fotoIdBtn').addEventListener('click', function() {
+    const id = document.getElementById('fotoIdInput').value.trim();
+    if (id) {
+        window.location.href = `fotos/foto/${id}`;
+    } else {
+        alert('Ingrese un ID válido');
+    }
 });
 </script>
